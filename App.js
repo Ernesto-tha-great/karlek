@@ -1,13 +1,13 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
 import tw from 'tailwind-rn';
+import { AuthProvider } from './hooks/useAuth';
+import Navigation from './navigation/navigation';
 
 export default function App() {
   return (
-    <View style={tw("flex-1 justify-center items-center")}>
-      <Text>Open up App.js to start working on your app!</Text>
-      
-    </View>
+    <AuthProvider>
+    <Navigation />
+    </AuthProvider>
   );
 }
 

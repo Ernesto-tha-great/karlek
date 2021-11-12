@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "18962783514",
+    "project_id": "karlek-bc00c",
+    "storage_bucket": "karlek-bc00c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:18962783514:android:e04a3e24db1b9a154160a3",
+        "android_client_info": {
+          "package_name": "host.exp.exponent"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "18962783514-t2as0e4249o3put7r49vbsb586ilscbs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXA58nYLsMZE7wviFQPfUtUaqTr2HLStc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "18962783514-t2as0e4249o3put7r49vbsb586ilscbs.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "18962783514-o1nkenpamkbt96183i0fo0l70m6c2gk7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "host.exp.exponent"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
