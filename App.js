@@ -1,5 +1,4 @@
 import React from 'react';
-import tw from 'tailwind-rn';
 import { AuthProvider } from './hooks/useAuth';
 import Navigation from './navigation/navigation';
 import { LogBox } from 'react-native';
