@@ -16,12 +16,12 @@ const Navigation = () => {
         <Stack.Navigator>
             {user ? (
                 <>
-                    <Stack.Screen name="Home" component={HomeScreen} options={{ }} />
-                    <Stack.Screen name="Chat" component={ChatScreen} options={{ }} />
+                    <Stack.Screen name="Home" component={HomeScreen} options={{headerShown: false }} />
+                    <Stack.Screen name="Chat" component={ChatScreen} options={{headerShown: false }} />
                 </>
             ) : (
                 <>
-                    <Stack.Screen name="Login" component={LoginScreen} options={{ }} />
+                    <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false}} />
                 </>
             )}
           

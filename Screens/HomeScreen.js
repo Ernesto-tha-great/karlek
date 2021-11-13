@@ -1,15 +1,16 @@
 import React from 'react'
-import { View, Text, Button } from 'react-native'
+import { View, Text, Button, SafeAreaView} from 'react-native'
 import useAuth from '../hooks/useAuth'
+
 
 const HomeScreen = () => {
     const { logout } = useAuth()
     return (
-        <View>
+        <SafeAreaView>
             <Text>Hey there</Text>
             <Button title="Log out" onPress={logout} />
 
-        </View>
+        </SafeAreaView>
     )
 }
 
