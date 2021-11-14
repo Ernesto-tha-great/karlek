@@ -1,11 +1,16 @@
+import { useNavigation } from '@react-navigation/core'
 import React from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, SafeAreaView, TouchableOpacity} from 'react-native'
 
 const ChatScreen = () => {
+    const navigation = useNavigation()
     return (
-        <View>
+        <SafeAreaView>
             <Text>Chat screen</Text>
-        </View>
+            <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+                <Text>Go to home</Text>
+            </TouchableOpacity>
+        </SafeAreaView>
     )
 }
 
