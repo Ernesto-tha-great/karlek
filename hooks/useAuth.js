@@ -31,7 +31,7 @@ export const AuthProvider = ({children}) => {
             setLoadingInitial(false);
         })
         
-    }, [user])
+    }, [])
 
     const logout =  () => {
         setLoading(true)
