@@ -84,12 +84,12 @@ const HomeScreen = () => {
     return ( 
         <SafeAreaView style={tw("flex-1")}>
             {/* header */}
-            <View style={tw("flex-row justify-between px-4")}>
+            <View style={tw("flex-row justify-between  px-4 py-2")}>
                 <TouchableOpacity onPress={logout} activeOpacity={0.7} style={tw("")}>
                     <Image source={{uri: user.photoURL}} style={tw("h-10 w-10 rounded-full ")} />
                 </TouchableOpacity>
 
-                <TouchableOpacity activeOpacity={0.7} style={tw("")}>
+                <TouchableOpacity onPress={() => navigation.navigate("Modal")} activeOpacity={0.7} style={tw("")}>
                     <Text style={tw("text-3xl text-red-400 font-semibold ")}>Karlek</Text>
                 </TouchableOpacity>
 
