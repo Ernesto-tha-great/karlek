@@ -1,10 +1,12 @@
 import { useNavigation } from '@react-navigation/core'
-import React, {useRef} from 'react'
+import React, {useRef, useState, useEffect, useLayoutEffect} from 'react'
 import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Image} from 'react-native'
 import useAuth from '../hooks/useAuth'
 import tw from 'tailwind-rn';
 import {AntDesign, Entypo, Ionicons} from '@expo/vector-icons'
 import Swiper from 'react-native-deck-swiper';
+import { collection, doc, getDocs, onSnapshot, query, setDoc, where } from '@firebase/firestore';
+import { db } from '../firebase';
 
 const DUMMY_DATA =[
     {
@@ -79,8 +81,50 @@ const DUMMY_DATA =[
 const HomeScreen = () => {
     const navigation = useNavigation()
     const {user, logout } = useAuth()
+    const [profiles,setProfiles] = useState([])
     //use ref allows you to point at element/objectn in the screen
     const swipeRef = useRef(null);
+
+        useLayoutEffect(() => 
+            onSnapshot(doc(db, "users", user.uid), snapshot => {
+                if(!snapshot.exists()){
+                    navigation.navigate('Modal')
+            }}
+            )
+           
+        ,[])
+
+        useEffect(() => {
+            let unsub;
+
+            const fetchCards = async () => {
+                const passes = getDocs(collection(db, "users", user.uid, "passes")).then(snapshot => snapshot.docs.map(doc => doc.id))
+
+                const passedUserIds = (await passes).length > 0 ? passes : ['test']
+
+                unsub = onSnapshot(query(collection(db, "users"), where("id", "not-in", [...passedUserIds])), snapshot => {
+                    setProfiles(snapshot.docs.filter(doc => doc.id !== user.uid).map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    })))
+                }) 
+            }
+
+            fetchCards();
+            return () => unsub();
+        },[])
+
+        const swipeLeft =  (cardIndex)  => {
+            if (!profiles[cardIndex]) return;
+            const userSwiped = profiles[cardIndex];
+            console.log(`you swiped pass on ${userSwiped.displayName}`)
+
+            setDoc(doc(db, "users", user.uid, "passes", userSwiped.id), userSwiped)
+        }
+
+        const swipeRight = async () => {
+
+        }
     return ( 
         <SafeAreaView style={tw("flex-1")}>
             {/* header */}
@@ -105,14 +149,14 @@ const HomeScreen = () => {
             <Swiper
                 ref={swipeRef}
                 containerStyle={{backgroundColor: 'transparent'}}
-                cards={DUMMY_DATA}
+                cards={profiles}
                 stackSize={3}
                 cardIndex={0}
                 verticalSwipe={false}
                 animateCardOpacity={true}
                 backgroundColor={"#4FD"}
-                onSwipedLeft={() => console.log('swipped pass')}
-                onSwipedRight={() => console.log('swipped match')}
+                onSwipedLeft={(cardIndex) => {console.log('swipped pass'), swipeLeft(cardIndex)}}
+                onSwipedRight={(cardIndex) => {console.log('swipped pass'), swipeRight(cardIndex)}}
                 overlayLabels={{
                     left: {
                         title: 'Nah',
@@ -134,7 +178,7 @@ const HomeScreen = () => {
                         }
                     }
                 }}
-                renderCard={(card) => (
+                renderCard={(card) => card ?  (
                     <View key={card.id} style={tw(" relative bg-white h-3/4 rounded-xl ")}>
                         <Image 
                         source={{uri: card.photoURL}} 
@@ -143,11 +187,22 @@ const HomeScreen = () => {
 
                         <View style={[tw("absolute bottom-0 bg-white w-full h-20 items-center flex-row justify-between px-6 py-2 rounded-b-xl"), styles.cardShadow]}>
                             <View>
-                                <Text style={tw("text-xl font-semibold")}>{card.firstName} {card.lastName}</Text>
+                                <Text style={tw("text-xl font-semibold")}>{card.displayName}</Text>
                                 <Text style={tw("font-semibold text-xs")}>{card.occupation}</Text>
                             </View>
                             <Text style={tw("text-2xl font-semibold")}>{card.age}</Text>
                         </View>
+                    </View>
+                ) : (
+                    <View style={[tw("relative bg-white h-3/4 rounded-xl justify-center items-center"), styles.cardShadow]}>
+                        <Text style={tw("font-semibold pb-5")}>No more profiles</Text>
+
+                        <Image
+                          style={tw("h-20 w-full")}
+                          height={100}
+                          width={100}
+                          source={{uri:"https://links.papareact.com/6gb"}}
+                          />
                     </View>
                 )}
             />

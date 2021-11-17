@@ -1,19 +1,33 @@
+import { doc, serverTimestamp, setDoc } from '@firebase/firestore';
 import { useNavigation } from '@react-navigation/core';
 import React, {useState} from 'react'
 import { View, Text, Image, TextInput, TouchableOpacity} from 'react-native'
 import tw from 'tailwind-rn';
+import { db } from '../firebase';
 import useAuth from '../hooks/useAuth';
 
 const ModalScreen = () => {
     const {user} = useAuth();
-    const [image, setImage] = useState('');
+    const [image, setImage] = useState('https://cdn.pixabay.com/photo/2021/11/11/13/08/leopard-6786267_960_720.jpg');
     const [occupation, setOccupation] = useState('');
     const [age, setAge] = useState('');
 
     const navigation = useNavigation();
     const incompleteForm = !image || !occupation || !age;
-    const updateUserProfile = () => {
 
+    const updateUserProfile = () => {
+        setDoc(doc(db, "users", user.uid), {
+            id: user.uid,
+            displayName: user.displayName,
+            photoURL: image,
+            occupation: occupation,
+            age: age,
+            timestamp: serverTimestamp()
+        }).then(() => {
+            navigation.navigate('Home');
+        }).catch(err => {
+            console.log(err);
+        })
     }
     return (
         <View style={tw("flex-1 items-center p-2 relative ")}>
@@ -74,6 +88,7 @@ const ModalScreen = () => {
                    </TouchableOpacity>
              ) : (
                 <TouchableOpacity
+                onPress={updateUserProfile}
                 activeOpacity={0.8}
                  style={tw("absolute w-64 p-3 rounded-xl  bottom-10 bg-red-400 ")}>
                        <Text style={tw("text-xl text-white text-center font-semibold")}>
