@@ -5,7 +5,7 @@ import useAuth from '../hooks/useAuth'
 import tw from 'tailwind-rn';
 import {AntDesign, Entypo, Ionicons} from '@expo/vector-icons'
 import Swiper from 'react-native-deck-swiper';
-import { collection, doc, getDocs, onSnapshot, query, setDoc, where } from '@firebase/firestore';
+import { collection, doc, getDoc, getDocs, onSnapshot, query, setDoc, where } from '@firebase/firestore';
 import { db } from '../firebase';
 
 const DUMMY_DATA =[
@@ -93,25 +93,27 @@ const HomeScreen = () => {
             )
            
         ,[])
-
+            //handling pulling swipes from the database
         useEffect(() => {
             let unsub;
 
             const fetchCards = async () => {
                 const passes = getDocs(collection(db, "users", user.uid, "passes")).then(snapshot => snapshot.docs.map(doc => doc.id))
+                const swipes = getDocs(collection(db, "users", user.uid, "swipes")).then(snapshot => snapshot.docs.map(doc => doc.id))
 
                 const passedUserIds = (await passes).length > 0 ? passes : ['test']
+                const swipedUserIds = (await swipes).length > 0 ? swipes : ['test']
 
-                unsub = onSnapshot(query(collection(db, "users"), where("id", "not-in", [...passedUserIds])), snapshot => {
+                unsub = onSnapshot(query(collection(db, "users"), where("id", "not-in", [...passedUserIds, ...swipedUserIds])), snapshot => {
                     setProfiles(snapshot.docs.filter(doc => doc.id !== user.uid).map(doc => ({
                         id: doc.id,
                         ...doc.data()
                     })))
-                }) 
+                })  
             }
 
             fetchCards();
-            return () => unsub();
+            return unsub;
         },[])
 
         const swipeLeft =  (cardIndex)  => {
@@ -122,7 +124,16 @@ const HomeScreen = () => {
             setDoc(doc(db, "users", user.uid, "passes", userSwiped.id), userSwiped)
         }
 
-        const swipeRight = async () => {
+        const swipeRight = async (cardIndex) => {
+            if (!profiles[cardIndex]) return;
+          
+            // get all relevant user data
+            const userSwiped = profiles[cardIndex];
+            // const loggedInProfile = await(
+            //     await getDoc(doc(db, "users", user.uid))
+            // ).data()
+            console.log(`You swiped on ${userSwiped.displayName} ${userSwiped.occupation}`)
+            setDoc(doc(db, "users", user.uid, "swipes", userSwiped.id), userSwiped)
 
         }
     return ( 
@@ -156,7 +167,7 @@ const HomeScreen = () => {
                 animateCardOpacity={true}
                 backgroundColor={"#4FD"}
                 onSwipedLeft={(cardIndex) => {console.log('swipped pass'), swipeLeft(cardIndex)}}
-                onSwipedRight={(cardIndex) => {console.log('swipped pass'), swipeRight(cardIndex)}}
+                onSwipedRight={(cardIndex) => {console.log('swipped match'), swipeRight(cardIndex)}}
                 overlayLabels={{
                     left: {
                         title: 'Nah',
