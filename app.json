@@ -28,6 +28,8 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": "This is a dating app built with react-native, firebase and tailwind",
+    "githubUrl": "https://github.com/Ernesto-tha-great/karlek"
   }
 }
