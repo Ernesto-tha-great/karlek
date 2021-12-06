@@ -5,8 +5,9 @@ import useAuth from '../hooks/useAuth'
 import tw from 'tailwind-rn';
 import {AntDesign, Entypo, Ionicons} from '@expo/vector-icons'
 import Swiper from 'react-native-deck-swiper';
-import { collection, doc, getDoc, getDocs, onSnapshot, query, setDoc, where } from '@firebase/firestore';
+import { collection, doc, getDoc, getDocs, onSnapshot, query, serverTimestamp, setDoc, where } from '@firebase/firestore';
 import { db } from '../firebase';
+import generateId from '../Lib/generateId';
 
 const DUMMY_DATA =[
     {
@@ -129,12 +130,39 @@ const HomeScreen = () => {
           
             // get all relevant user data
             const userSwiped = profiles[cardIndex];
-            // const loggedInProfile = await(
-            //     await getDoc(doc(db, "users", user.uid))
-            // ).data()
-            console.log(`You swiped on ${userSwiped.displayName} ${userSwiped.occupation}`)
-            setDoc(doc(db, "users", user.uid, "swipes", userSwiped.id), userSwiped)
+            const loggedInProfile = await(
+                await getDoc(doc(db, "users", user.uid))
+            ).data()
+            // check if the user swiped on you..
+            getDoc(doc(db, "users", userSwiped.id, "swipes", user.uid)).then(snapshot => {
+                if(snapshot.exists()) {
+                    //user has matched with you before
+                    //create a match
+                    console.log(`Hurray! you matched with ${userSwiped.displayName}`)
+                    setDoc(doc(db, "users", user.uid, "swipes", userSwiped.id), userSwiped)
 
+                    // creaye a match
+                    setDoc(doc(db, "matches", generateId(user.uid, userSwiped.id)), {
+                        users: {
+                            [user.uid]: loggedInProfile,
+                            [userSwiped.id]: userSwiped
+                        },
+                        usersMatched: [user.uid, userSwiped.id],
+                        timestamp: serverTimestamp()
+                    });
+                    navigation.navigate('Match', {
+                        loggedInProfile,
+                        userSwiped
+                    })
+                } else {
+                    //user has not matched with you before
+                    console.log(`You swiped on ${userSwiped.displayName} ${userSwiped.occupation}`)
+                    setDoc(doc(db, "users", user.uid, "swipes", userSwiped.id), userSwiped)
+        
+                }
+
+            })
+           
         }
     return ( 
         <SafeAreaView style={tw("flex-1")}>
