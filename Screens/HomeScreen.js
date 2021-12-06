@@ -9,75 +9,7 @@ import { collection, doc, getDoc, getDocs, onSnapshot, query, serverTimestamp, s
 import { db } from '../firebase';
 import generateId from '../Lib/generateId';
 
-const DUMMY_DATA =[
-    {
-        id: "1",
-        firstName: "Catherine",
-        lastName: "pierce",
-        age: "20",
-        occupation: "Student",
-        photoURL: "https://cdn.pixabay.com/photo/2018/11/28/19/53/woman-3844370__340.jpg",
-    },
-   
-    {
-        
-        id: "2",
-        firstName: "Micheal",
-        lastName: "Burnes",
-        age: "29",
-        occupation: "accountant",
-        photoURL: "https://cdn.pixabay.com/photo/2015/01/08/18/29/entrepreneur-593358__340.jpg",
-    },
-    {
-        id: '3',
-        firstName: "kerry ",
-        lastName: "holmes",
-        age: "26",
-        occupation: "chef",
-        photoURL: "https://cdn.pixabay.com/photo/2017/11/02/14/36/model-2911363__340.jpg",
-    },
-    {
-        id: '4',
-        firstName: "Chloe",
-        lastName: "kempt",
-        age: "22",
-        occupation: "journalist",
-        photoURL: "https://cdn.pixabay.com/photo/2015/01/12/10/44/woman-597173__340.jpg",
-    },
-    {
-        id: '5',
-        firstName: "Amanda",
-        lastName: "scheiner",
-        age: "20",
-        occupation: "Model",
-        photoURL: "https://cdn.pixabay.com/photo/2016/03/23/04/01/woman-1274056__340.jpg",
-    },
-    {
-        id: '6',
-        firstName: "Stella",
-        lastName: "murray",
-        age: "28",
-        occupation: "Software Developer",
-        photoURL: "https://cdn.pixabay.com/photo/2018/07/25/08/58/business-3560917__340.jpg",
-    },
-    {
-        id:' 7',
-        firstName: "Loren",
-        lastName: "fisher",
-        age: "22",
-        occupation: "Model",
-        photoURL: "https://cdn.pixabay.com/photo/2014/08/20/18/08/woman-422706__340.jpg",
-    },
-    {
-        id: '8',
-        firstName: "John",
-        lastName: "kean",
-        age: "20",
-        occupation: "math teacher",
-        photoURL: "https://cdn.pixabay.com/photo/2016/11/18/19/07/happy-1836445__340.jpg",
-    },
-  
-]
+
 
 const HomeScreen = () => {
     const navigation = useNavigation()
